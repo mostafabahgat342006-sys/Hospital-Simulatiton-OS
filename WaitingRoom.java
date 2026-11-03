@@ -28,10 +28,11 @@ public class WaitingRoom {
         spaces.P();
 
         lock.P();
-
-        queue.add(patient);
-
-        lock.V();
+        try {
+            queue.add(patient);
+        } finally {
+            lock.V();
+        }
 
         patients.V();
     }
@@ -42,24 +43,39 @@ public class WaitingRoom {
         patients.P();
 
         lock.P();
+        Patient patient;
+        try {
+            patient = queue.remove();
+        } finally {
+            lock.V();
+        }
 
-        Patient patient = queue.remove();
+        return patient;  // نطلع المريض من الطابور للدكتور يعالجه
+    }
 
-        lock.V();
-
+    // يتم استدعاؤها بعد حجز غرفة العلاج بنجاح: يغادر المريض صالة الانتظار ويفرغ مكاناً
+    public void releaseSpace() {
         spaces.V();
+    }
 
-        return patient;  //نطلع المريض من الطابور للدكتور يعالجه
+    // يتم استدعاؤها عند فشل حجز غرفة العلاج: يعود المريض إلى الطابور دون حجز مكان جديد
+    public void returnPatient(Patient patient) throws InterruptedException {
+        lock.P();
+        try {
+            queue.add(patient);
+        } finally {
+            lock.V();
+        }
+        patients.V();
     }
 
     public int getWaitingCount() throws InterruptedException {
 
-        lock.P(); //استنى لحد ما محدش يكون بيعدّل الـ Queue، وبعدها اقرأ العدد.
-
-        int count = queue.size();
-
-        lock.V();
-
-        return count;
+        lock.P(); // استنى لحد ما محدش يكون بيعدّل الـ Queue، وبعدها اقرأ العدد.
+        try {
+            return queue.size();
+        } finally {
+            lock.V();
+        }
     }
 }

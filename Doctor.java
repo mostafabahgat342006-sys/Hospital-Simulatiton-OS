@@ -1,5 +1,3 @@
-
-
 public class Doctor implements Runnable {
 
     private String name;
@@ -35,12 +33,16 @@ public class Doctor implements Runnable {
                             + patient.getName()
                             + " back to the waiting room.");
 
-                    waitingRoom.addPatient(patient);
+                    // إعادة المريض إلى صالة الانتظار دون حجز مكان جديد
+                    waitingRoom.returnPatient(patient);
 
                     System.out.println(name + " is now available.");
 
                     continue;
                 }
+
+                // تم حجز غرفة العلاج: يغادر المريض صالة الانتظار ويفرغ مكاناً لمريض من الخارج
+                waitingRoom.releaseSpace();
 
                 try {
 
@@ -51,13 +53,15 @@ public class Doctor implements Runnable {
                             + " begins treating "
                             + patient.getName() + ".");
 
-                    
                     // Simulate treatment time
                     Thread.sleep((int) (Math.random() * 5 + 1) * 1000);
 
                     System.out.println(name
                             + " finished treating "
                             + patient.getName() + ".");
+
+                    // إعلام المريض بانتهاء العلاج ليتمكن من مغادرة المستشفى
+                    patient.finishTreatment();
 
                 } finally {
 

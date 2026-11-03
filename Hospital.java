@@ -61,6 +61,15 @@ public class Hospital {
             doctorThreads[i].interrupt();
         }
 
+        // 8. انتظار توقف جميع الأطباء للتأكد من انتهاء البرنامج بشكل نظيف
+        for (int i = 0; i < numDoctors; i++) {
+            try {
+                doctorThreads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         System.out.println("\nAll patients have been treated.");
         System.out.println("Simulation completed.");
         scanner.close();
