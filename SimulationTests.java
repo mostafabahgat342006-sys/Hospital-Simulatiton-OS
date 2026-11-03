@@ -4,7 +4,6 @@ import java.util.*;
 
 public class SimulationTests {
 
-    // صالة انتظار مراقبة للتحقق البرمجي الفعلي من أن سعة الصالة لا يتم تجاوزها أبداً
     static class MonitoredWaitingRoom extends WaitingRoom {
         private final int capacity;
         private int currentOccupancy = 0;
@@ -119,7 +118,7 @@ public class SimulationTests {
 
         public int timeoutCount;
         public int returnCount;
-        public boolean timeoutReturnedObserved; // يتحقق من أن نفس المريض الذي انتهت مهلته تمت إعادته
+      public boolean timeoutReturnedObserved; // ي    تحقق من أن نفس المريض الذي انتهت مهلته تمت إعادته       
 
         public boolean threadsTerminated;
         public boolean noDeadlock;
